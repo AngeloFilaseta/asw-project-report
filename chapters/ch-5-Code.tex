@@ -1,0 +1,112 @@
+\chapter{Codice}
+
+\section{Server}
+
+\subsection{Routes}
+La definizione delle Route è situata nei file della cartella \textit{routes}.\newline
+Il router del server crea la route attraverso un metodo che ha lo stesso nome del metodo HTTP usato per accedere alla route e vi associa l'handler che deve gestire le request.\newline
+È possibile associare anche dei middleware alle route, ovvero una funzione che viene eseguita prima dell'effettivo handler, solitamente per effettuare dei controlli.\newline
+Nello snippet che segue il middleware auth non permette lo scaricamento di un report, a meno che l'utente non sia autenticato.\newline
+Tutti i componenti che si occupano di gestire la logica delle route si trovano nella cartella \textit{controller}.
+
+\begin{minted}{js}
+router.post("/auth/signup",(req, res) => AuthController.signup(req, res));
+
+router.post("/auth/login", (req, res) => AuthController.login(req, res));
+//notice the auth middleware
+router.get("/dw/report", auth, (req, res) => ResourceController.downloadReport(req, res));
+
+\end{minted}
+
+\subsection{Model su Mongoose}
+La definizione degli Schema del DataBase sono state strutturate utilizzando Mongoose. Lo Schema degli User per esempio è definito nel seguente modo:
+
+\begin{minted}{js}
+let UserSchema = new Schema({
+    username: {
+        type: String,
+        require: true
+    },
+    password: {
+        type: String,
+        require: true
+    },
+    notifications: [{
+        type: Schema.Types.ObjectId,
+        ref:"Notification"
+    }],
+    user_in_games: [{
+        type: Schema.Types.ObjectId,
+        ref:"UserInGame"
+    }]
+});
+\end{minted}
+
+\noindent Anche tutti gli altri Schema sono stati creati utilizzando la stessa sintassi. È possibile salvare un nuovo utente creandolo attraverso il costruttore e poi richiamando il metodo \textit{save()}.
+\begin{minted}{js}
+ let newUser = new User({username: username, password: pw});
+ newUser.save().then(
+                //handler if operation succeeds
+            ).catch(
+                //handler if operation fails
+            );
+\end{minted}
+
+\noindent Per effettuare operazioni direttamente sulla collezione è possibile utilizzare direttamente i metodi offerti dallo schema:
+
+\begin{minted}{js}
+ User.findOne({ username: "Jotaro" }).then(result => /*...*/)
+\end{minted}
+\subsection{Socket Handlers}
+Una volta che una connessione tramite socket viene instaurata col client è possibile ricevere ed inviare messaggi attraverso un canale full duplex. Ogni messaggio viene mandato e ricevuto su uno specifico channel, in modo che un handler possa leggerlo, gestirlo, e con ogni probabilità aggiornare lo stato interno del sistema.
+Gli handler dei canali delle socket si trovano nella cartella \textit{socket/handlers}, mentre il controller che li utilizza è il file \textit{socket/controller.js}.
+\begin{minted}{js}
+    io.on('connection', (socket) => {
+
+        socket.on(Channels.CREATE_LOBBY, (json) => createLobbyHandler(socket, json));
+    
+        socket.on(Channels.SENTENCE, (json) => sentenceHandler(socket, json));
+
+        socket.on(Channels.DRAW, (json) => drawHandler(socket, json));
+        
+        //...
+        
+        socket.on(Channels.DISCONNECT, () => disconnectHandler(socket));
+    });
+\end{minted}
+
+\section{Client}
+
+\subsection{Requests}
+La gestione delle request sul client è incapsulata nei file js il cui nome finisce con \textit{"Logic"}, i quali mettono a disposizione funzioni che effettuano richieste e aggiornano lo stato interno dell'applicazione.\newline
+Per effettuare le richieste è stata utilizzata la libreria JQuery. Una richiesta ha il seguente formato: 
+\begin{minted}{js}
+    ajax({
+    	url: SERVER_ADDRESS + "/route",
+    	type: 'POST', //can be for example GET, or any other HTTP method
+    	data: {...} //data to send, not mandatory
+    	headers: {"Authorization": token} //used in protected routes
+    }).done(function (result) {
+    	// do something with the result... probably updating redux status
+    });
+\end{minted}
+
+L'header \textit{"Authorizarion"} è necessario solo per le route che richiedono che l'utente sia autenticato. In questo caso il valore è il Bearer token affidato all'utente, incapsulato nello stato di redux.
+
+\subsection{Socket Handlers}
+Una volta che una connessione tramite socket viene instaurata col server è possibile ricevere ed inviare messaggi attraverso un canale full duplex. Ogni messaggio viene mandato e ricevuto su uno specifico channel, in modo che un handler possa leggerlo, gestirlo, e con ogni probabilità aggiornare lo stato interno del sistema.
+Gli handler dei canali delle socket si trovano nella cartella \textit{socket/handlers}
+\begin{minted}{js}
+    io.on('connection', (socket) => {
+
+        socket.on(Channels.CREATE_LOBBY, (json) => createLobbyHandler(socket, json));
+    
+        socket.on(Channels.SENTENCE, (json) => sentenceHandler(socket, json));
+
+        socket.on(Channels.DRAW, (json) => drawHandler(socket, json));
+        
+        [...]
+        
+        socket.on(Channels.DISCONNECT, () => disconnectHandler(socket));
+    });
+\end{minted}

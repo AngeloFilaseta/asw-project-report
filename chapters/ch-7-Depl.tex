@@ -1,0 +1,95 @@
+\chapter{Deployment}
+In questo capitolo verrà illustrato come poter effettuare il deploy dell'applicativo.\newline
+
+\noindent Oltre alla versione in locale, utilizzata in fase di sviluppo e testing, è stato possibile di rendere disponibile una versione online funzionante, così da testarne in maniera più accurata alcuni aspetti e ottenere feedback da utenti reali facendoli interagire con il sistema. \newline
+\noindent Per tale scopo è stato utilizzato il servizio gratuito di Amazon AWS per ottenere una macchina virtuale sul cui poter effettuare il deploy.\newline
+
+\noindent Verranno esposte due modalità per effettuare il deployment: una tradizionale ed una con il supporto di Docker.
+
+\section{Docker-free deployment}
+\subsection{Prerequisiti, installazione di Software}
+\noindent Per poter effettuare il deployment risulta necessario installare i seguenti software permettere al sistema un corretto funzionamento:
+\begin{itemize}
+    \item \textbf{git}: necessario per reperire il repository del progetto. È possibile reperire i sorgenti in qualsiasi altro modo, ma utilizzare git permette ovviamente più flessibilità.
+    \item \textbf{npm}: necessario per installare le dipendenze necessarie e per il corretto funzionamento del componente client.
+    \item \textbf{node}: necessario per il corretto funzionamento del componente server.
+    \item \textbf{mongodb}: necessario per avere a disposizione il database.
+\end{itemize}
+\subsection{Deployment Server}
+Il deployment del server è molto più semplice della controparte client. È sufficiente collocarsi nella cartella del server, installare le dipendenze utilizzando:
+\begin{minted}{bash}
+   npm install
+\end{minted}
+ed avviare il server utilizzando il comando 
+\begin{minted}{bash}
+   node app.js
+\end{minted}
+
+\begin{warn}[ATTENTZIONE:]
+nel caso si scelga di effettuare il deployment docker-free sarà necessario adeguare la stringa di connessione al db, reperibile presso asw-project/server/conf/conf.js
+\end{warn}
+
+\subsection{Deployment Client}
+
+Per il deployment del client sarà necessario spostarsi all'interno della cartella "client" e lanciare il comando
+
+\begin{minted}{bash}
+    npm install
+\end{minted}
+
+che provvederà all'import di tutte le librerie npm utilizzate dal client.
+
+È poi necessario eseguire il comando:
+\begin{minted}{bash}
+    npm run build
+\end{minted}
+che si occuperà di creare i file di build all'interno della cartella \textit{build}~\cite{ProductionReact:online}.\newline
+Infine basterà eseguire il comando:
+\begin{minted}{bash}
+    serve -s build
+\end{minted}
+
+\section{Dockerized deployment}
+
+\subsection{Docker}
+Docker è un sistema open-source tramite il quale è possibile automatizzare il processo di deployment di applicazioni all'interno di contenitori software.\newline
+Docker implementa API di alto livello per gestire \textit{container che eseguono processi in ambienti isolati}.\newline
+
+\noindent Utilizzando i container dunque le risorse possono essere isolate, i servizi limitati e i processi avviati in modo da avere una prospettiva completamente privata del sistema operativo, col loro proprio identificativo, file system e interfaccia di rete. Più container condividono lo stesso kernel, ma ciascuno di essi può essere costretto a utilizzare una certa quantità di risorse, come la CPU, la memoria e l'I/O.\newline
+
+\noindent L'utilizzo di Docker per creare e gestire i container può semplificare la creazione di sistemi distribuiti, permettendo a diverse applicazioni o processi di lavorare in modo autonomo sulla stessa macchina fisica o su diverse macchine virtuali. Ciò consente di effettuare il deployment di nuovi nodi solo quando necessario.\newline
+
+\noindent Al fine di creare un container Docker sarà necessario specificare un \textbf{Dockerfile} per ogni servizio erogato. 
+Similmente ai gitignore per il versioning git, è possibile definire dei \textbf{dockerignore} per segnalare a docker quali file ignorare durante la copia dei file all'interno del container.
+
+\begin{figure}[H]
+    \caption{Logo di Docker}
+    \centering
+    \includegraphics[width= 100mm]{img/logos/docker_logo.png}
+    \label{fig:docker_logo}
+\end{figure}
+
+\subsection{Docker compose}
+Il deployment di più sottosistemi può essere effettuato tramite lo strumento Compose di Docker; tramite essi verrà eseguita un'applicazione Docker multi-container.\newline
+
+\noindent Sarà necessario creare un file \textbf{docker-compose.yml} dove verrà fatto riferimento ai Dockerfile di ogni singolo servizio al fine di creare un macro-container che contenga al suo interno tutti i container dei servizi.\newline
+
+\noindent In quanto di default ogni container risulta isolato dagli altri, sarà necessario specificare l'esistenza di una sotto-rete interna all'esecuzione del macro-container del Docker compose. Gli indirizzi da specificare all'interno degli applicativi dovranno tenere conto dei namespace della rete così definita in docker-compose.yml.\newline
+
+\noindent Per fare in modo che i servizi siano raggiungibili dall'esterno del container, sarà fondamentale inoltre mappare le porte interne al container con le porte della macchina sulla quale il container è in esecuzione.
+
+\subsection{Deployment}
+Una volta installato Docker sul sistema, sarà necessario semplicemente posizionarsi nella cartella asw-project ed eseguire il comando 
+\begin{minted}{bash}
+    docker-compose up --build
+\end{minted}
+Per terminare l'esecuzione sarà semplicemente necessario usare la combinazione di tasti CTRL+C e successivamente lanciare il comando
+\begin{minted}{bash}
+    docker-compose down
+\end{minted}
+Per far sì che lo script sia lanciato in modalità detached basterà lanciare il comando
+\begin{minted}{bash}
+    docker-compose up --build -d
+\end{minted}
+così che l'esecuzione del processo sia indipendente dalla bash presso la quale è stato lanciato il comando.\newline
+\noindent In questo caso per terminare l'esecuzione sarà necessario solamente il comando docker-compose down.

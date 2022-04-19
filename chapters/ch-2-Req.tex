@@ -1,0 +1,125 @@
+\chapter{Requisiti}
+L’idea di progetto consiste nel creare un’architettura Client-Server che permetta lo svolgimento del gioco sopra descritto tramite un client web.\newline
+\noindent Il server coordina i giocatori, orchestrandone gli stati, con l’idea di rendere il gioco scalabile.\newline
+
+\noindent Si vuole rendere fruibile il gioco tramite client web mobile, tablet e desktop, per permettere a più giocatori possibile di giocare garantendo totale libertà riguardo al device scelto; ne segue dunque che il client sarà realizzato seguendo una filosofia mobile first.\newline
+
+\noindent Sarà possibile registrarsi al servizio, anche al fine di fornire un sistema di notifiche riguardo ad alcune attività e recuperare dati riguardanti le partite precedentemente svolte.\newline
+
+\noindent Inoltre, verrà fornita una chat con la quale i giocatori possano comunicare durante la partita.\newline
+
+\section{Obiettivi}
+
+\noindent Per la prioritizzazione dei nostri obiettivi utilizzeremo il metodo MoSCoW:
+\begin{enumerate}
+    \item \textit{MUST}:     
+    \begin{itemize}
+        \item Modellazione di tutti i sistemi tramite rappresentazioni di Ingegneria del Software
+        \item Gestione delle lobby
+        \item Gestione degli stati di gioco      
+        \item Autentificazione
+        \item Notifiche
+        \item Test con utenti
+        \item Resposiveness
+        \item Accessibilità
+    \end{itemize}
+    \item \textit{SHOULD}: 
+    \begin{itemize}
+        \item Implementazione di un sistema di messaggistica
+        \item Possibilità di consultare i report delle partite passate
+        \item Feedback grafici (popup)
+    \end{itemize}
+    \item \textit{WOULD}:
+        \begin{itemize}
+            \item Animazioni
+            \item Feedback audio
+        \end{itemize}
+    \item \textit{WON'T}:     
+    \begin{itemize}
+        \item Possibilità di scaricare in locale i report delle partite passate
+    \end{itemize}
+\end{enumerate}
+
+\section{Personas}
+Le personas sono veri e propri identikit di utenti ideali interessati al servizio offerto. Sono una rappresentazione dei tratti caratterizzanti di ciascun utente e di quelli che li accomunano.\newline
+
+\noindent Per GuessR, sono state individuate 3 personas che identificano gli utenti target:
+
+\subsection{Jonathan}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=100mm]{img/personas/jonathan.jpg}
+    \label{fig:personas_jonathan}
+\end{figure}
+\textit{Profilo personale:}
+\begin{itemize}
+    \item Età: 14 anni
+    \item Sesso: maschile
+    \item Status: vive con i suoi genitori e, durante le sere infrasettimanali, si collega con i suoi amici tramite Discord per giocare a vari videogiochi
+\end{itemize}
+\textit{Occupazione/Formazione:}
+\begin{itemize}
+    \item Frequenta l'ultimo anno di scuole medie, dove si concentrano anche la maggior parte dei suoi amici, molto simili a lui. Non dispone di un reddito.
+\end{itemize}
+\textit{Comportamento online:}
+\begin{itemize}
+    \item Tempo su internet: almeno 20 ore a settimana
+    \item Utilizza internet per: messaggistica istantanea, social network, videogiochi, cercare notizie calcistiche
+\end{itemize}
+\textit{Interessi personali:}
+\begin{itemize}
+    \item Videogiochi: predilige i giochi di gruppo, ma occasionalmente gioca anche a dei single-player
+    \item Calcio: segue tutte le notizie della sua squadra e frequenta un'associazione calcistica locale per dilettanti
+\end{itemize}
+\subsection{Jolyne}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=100mm]{img/personas/jolyne.jpg}
+    \label{fig:personas_jolyne}
+\end{figure}
+\textit{Profilo personale:}
+\begin{itemize}
+    \item Età: 22 anni
+    \item Sesso: femminile
+    \item Status: studentessa universitaria fuori sede, si riunisce spesso con i suoi amici per fare serata e, in quelle occasioni, necessita di giochi di gruppo semplici e divertenti
+\end{itemize}
+\textit{Occupazione/Formazione:}
+\begin{itemize}
+    \item Frequenta la triennale di psicologia, di tanto in tanto lavora in un ristorante a chiamata. Dispone di un reddito basso occasionale.
+\end{itemize}
+\textit{Comportamento online:}
+\begin{itemize}
+    \item Tempo su internet: 15 ore a settimana
+    \item Utilizza internet per: messaggistica istantanea, social network, studio universitario
+\end{itemize}
+\textit{Interessi personali:}
+\begin{itemize}
+    \item Psiche umana: da sempre affascinata, sviluppa questa passione tramite il percorso di studi
+    \item Arte: di tanto in tanto si cimenta in qualche illustrazione per svagarsi 
+\end{itemize}
+\subsection{Joseph}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=100mm]{img/personas/joseph.jpg}
+    \label{fig:personas_joseph}
+\end{figure}
+\textit{Profilo personale:}
+\begin{itemize}
+    \item Età: 27 anni
+    \item Sesso: maschile
+    \item Status: convive con la sua compagna in un appartamento, occasionalmente si connette tramite Skype con gli amici della sua città natale
+\end{itemize}
+\textit{Occupazione/Formazione:}
+\begin{itemize}
+    \item Dopo aver terminato le scuole superiori ha cominciato una carriera da impiegato d'ufficio e, una volta ricevuta una promozione, l'azienda l'ha trasferito fuori sede
+\end{itemize}
+\textit{Comportamento online:}
+\begin{itemize}
+    \item Tempo su internet: almeno 30 ore a settimana
+    \item Utilizza internet per: messaggistica istantanea, social network, eseguire pratiche burocratiche a lavoro, riempire i momenti di vuoto lavorativi
+\end{itemize}
+\textit{Interessi personali:}
+\begin{itemize}
+    \item Film e serie TV: li utilizza la sera per rilassarsi
+    \item Videogiochi: altra alternativa serale, videogiocatore dall'alba dei tempi
+\end{itemize}
